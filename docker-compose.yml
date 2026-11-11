@@ -1,0 +1,11 @@
+services:
+  priv-host:
+    build: .
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - priv-host-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  priv-host-data:

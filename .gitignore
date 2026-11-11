@@ -19,3 +19,5 @@ data/*.e2e.db
 
 # Sistema
 .DS_Store
+
+data/.encryption-key

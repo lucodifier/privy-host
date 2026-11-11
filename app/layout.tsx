@@ -16,11 +16,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "PRIVault",
-    template: "%s · PRIVault",
+    default: "Priv Host",
+    template: "%s · Priv Host",
   },
   description:
-    "PRIVault — gerenciamento de credenciais e segredos para times de engenharia.",
+    "Seus sistemas, ambientes e acessos em um só lugar.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
