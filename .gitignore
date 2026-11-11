@@ -1,0 +1,21 @@
+# Dependências
+node_modules
+.next
+out
+next-env.d.ts
+*.tsbuildinfo
+
+# Ambiente
+.env
+.env.*
+!.env.example
+
+# Banco de dados local (SQLite)
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/*.e2e.db
+
+# Sistema
+.DS_Store

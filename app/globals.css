@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+  PRIVault — design tokens.
+  Dark is the mandatory default. Light theme will be added later by overriding
+  these same variables under [data-theme="light"]; nothing else needs to change.
+*/
+:root {
+  --canvas: #17191f;
+  --panel: #20232b;
+  --surface: #272b35;
+  --line: #353a46;
+  --brand: #f97316;
+  --brand-hover: #ea580c;
+  --brand-light: #fb923c;
+  --ink: #e5e7eb;
+  --muted: #9298a5;
+  --success: #22c55e;
+  --danger: #ef4444;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-light: var(--brand-light);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--brand) 28%, transparent);
+    color: var(--ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--brand) 65%, transparent);
+    outline-offset: 1px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--line);
+    border: 3px solid var(--canvas);
+    border-radius: 999px;
+  }
+}
