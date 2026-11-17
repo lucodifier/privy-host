@@ -6,7 +6,17 @@ import { Check, Copy, ExternalLink, Eye, EyeOff, Globe, Pencil, Plus, Search, Se
 import { systemSchema, type Access, type System, type SystemInput } from "@/lib/systems";
 
 const blank = (): SystemInput => ({ name: "", url: "", environment: "", accesses: [] });
-const newAccess = (): Access => ({ id: crypto.randomUUID(), description: "", login: "", password: "" });
+// crypto.randomUUID só existe em contexto seguro (HTTPS ou localhost). Em http://IP:porta ele é
+// undefined e o clique em "Adicionar acesso" quebrava; getRandomValues funciona nos dois casos.
+function newId() {
+  if (typeof crypto.randomUUID === "function") return crypto.randomUUID();
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = Array.from(bytes, byte => byte.toString(16).padStart(2, "0")).join("");
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+const newAccess = (): Access => ({ id: newId(), description: "", login: "", password: "" });
 
 function Credential({ label, value, secret = false, notify }: { label: string; value: string; secret?: boolean; notify: (message: string) => void }) {
   const [visible, setVisible] = useState(false);
