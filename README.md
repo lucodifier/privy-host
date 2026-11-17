@@ -34,6 +34,7 @@ Tudo roda na sua máquina. Nenhum dado sai dela.
 | 🔑 **Múltiplos acessos por sistema** | Descrição, login e senha; edite e remova quando quiser. |
 | 👁️ **Mostrar / copiar** | Credenciais ocultas por padrão, reveladas ou copiadas sob demanda. |
 | 🔎 **Busca** | Encontre sistemas por nome ou ambiente. |
+| 👥 **Usuários e permissões por sistema** | Usuário `root` cadastra sistemas e usuários; cada usuário só vê e edita os acessos dos sistemas vinculados a ele. |
 | 🛡️ **Criptografia em repouso** | Cada registro é cifrado com AES-256-GCM antes de ir ao SQLite. |
 | 🐳 **Docker pronto** | Um `docker compose up` e está no ar, com volume persistente. |
 
@@ -47,7 +48,9 @@ cd privy-host
 docker compose up -d --build
 ```
 
-Abra **http://localhost:3000**
+Abra **http://localhost:3000** e entre com o usuário `root` (veja [Primeiro acesso](#-usuários-e-permissões)).
+
+> Quer outra porta (a 3000 do servidor pode estar ocupada)? Copie `.env.example` para `.env` e defina `PRIV_HOST_PORT=8085`. Veja [Porta e rede](#porta-e-rede).
 
 | Rota | O que faz |
 |---|---|
@@ -88,17 +91,45 @@ services:
       PRIV_HOST_ENCRYPTION_KEY: "<chave>"
 ```
 
-### Acessar de outra máquina da rede
+### Porta e rede
 
-Troque `127.0.0.1:3000:3000` por `3000:3000` em `docker-compose.yml`.
-Como não há login, só faça isso em rede confiável.
+Tudo é configurado no `.env` (copie de `.env.example`), sem editar o `docker-compose.yml`:
+
+| Variável | Padrão | Para quê |
+|---|---|---|
+| `PRIV_HOST_PORT` | `3000` | Porta publicada no servidor (dentro do container é sempre 3000). |
+| `PRIV_HOST_BIND` | `127.0.0.1` | `0.0.0.0` para acessar de outras máquinas. Prefira um proxy HTTPS na frente. |
+
+```bash
+# exemplo: servidor com a 3000 ocupada, acessível pela rede
+echo "PRIV_HOST_PORT=8085" >> .env
+echo "PRIV_HOST_BIND=0.0.0.0" >> .env
+docker compose up -d --build   # http://SERVIDOR:8085
+```
+
+### Atualizar sem perder dados
+
+O banco SQLite (`priv-host.db`) e a chave ficam no volume Docker **`priv-host-data`**, fora da imagem. O volume tem nome fixo, então não muda se você clonar o repositório em outra pasta.
+
+```bash
+git pull
+docker compose up -d --build   # recria só o container; o volume é mantido
+```
+
+- O container **nunca** recria nem sobrescreve o banco. Novas versões aplicam migrações que apenas **adicionam** tabelas/colunas (controladas por `PRAGMA user_version`).
+- **Não use** `docker compose down -v` (apaga o volume).
+- Se você já rodava uma versão anterior com o volume antigo (`<pasta>_priv-host-data`), copie os dados uma vez:
+  ```bash
+  docker volume ls | grep priv-host            # confirme o nome do volume antigo
+  docker run --rm -v <volume-antigo>:/from -v priv-host-data:/to alpine sh -c "cp -a /from/. /to/"
+  ```
 
 ## 🛠️ Desenvolvimento (sem Docker)
 
 Requer **Node.js 24+** (usa o `node:sqlite` nativo).
 
 ```bash
-cp .env.example .env   # preencha PRIV_HOST_ENCRYPTION_KEY
+cp .env.example .env   # preencha PRIV_HOST_ENCRYPTION_KEY (e, se quiser, PRIV_HOST_ROOT_PASSWORD)
 npm install
 npm run dev            # http://localhost:3000
 ```
@@ -118,7 +149,28 @@ npm run dev            # http://localhost:3000
 - **Sem cache:** respostas da API usam `Cache-Control: no-store`.
 - **Bind local por padrão:** o Docker publica apenas em `127.0.0.1`.
 
-> ⚠️ **Sem autenticação própria.** Rode apenas na sua máquina ou em rede privada protegida (VPN, Tailscale, firewall). Não exponha na internet.
+- **Login com sessão:** senhas com scrypt, cookie `HttpOnly` + `SameSite=Lax` (e `Secure` atrás de HTTPS), sessão de 12 h, bloqueio de 5 min após 5 tentativas erradas.
+- **Permissão no servidor:** todas as rotas da API validam o usuário; a interface apenas reflete essas regras.
+
+> ⚠️ Mesmo com login, o serviço guarda senhas. Prefira rede privada (VPN, Tailscale, firewall) ou um proxy HTTPS; evite expor direto na internet. Sem HTTPS, o tráfego de login não é criptografado.
+
+## 👥 Usuários e permissões
+
+| Quem | Pode |
+|---|---|
+| **root** | Cadastrar/editar/excluir **sistemas**; cadastrar/editar/desativar/excluir **usuários**; vincular usuários a sistemas; ver tudo. |
+| **Usuário (admin de sistema)** | Ver e editar os **acessos** (descrição, login, senha) **somente dos sistemas vinculados a ele**. Não vê outros sistemas, não altera nome/URL/ambiente, não cadastra sistemas nem usuários. |
+
+Um usuário pode estar vinculado a mais de um sistema. Quem tenta acessar um sistema sem vínculo recebe "não encontrado".
+
+### Primeiro acesso
+
+Na primeira execução (banco sem root) o usuário `root` é criado:
+
+- com a senha de `PRIV_HOST_ROOT_PASSWORD`, se definida no `.env`; ou
+- com uma **senha aleatória**, mostrada nos logs (`docker compose logs priv-host`) e gravada em `data/root-initial-password.txt` no volume. O sistema exige a troca no primeiro login.
+
+Usuários criados pelo root também entram com a senha inicial definida por ele e precisam trocá-la no primeiro login. Se o root esquecer a senha, apague o usuário root direto no banco (ou restaure o backup) e reinicie para gerar outro; os sistemas e acessos não são afetados.
 
 ## 🏗️ Arquitetura
 

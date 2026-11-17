@@ -108,7 +108,7 @@ footer a{color:var(--orange2);font-weight:600}
 <body>
 <nav><div class="wrap">
   <a href="#" class="brand"><i>🔐</i><span class="gt">Priv Host</span></a>
-  <ul><li><a href="#features">Recursos</a></li><li><a href="#security">Segurança</a></li><li><a href="#start">Começar</a></li><li><a href="https://github.com/lucodifier/privy-host">GitHub</a></li></ul>
+  <ul><li><a href="#features">Recursos</a></li><li><a href="#roles">Permissões</a></li><li><a href="#security">Segurança</a></li><li><a href="#start">Começar</a></li><li><a href="https://github.com/lucodifier/privy-host">GitHub</a></li></ul>
   <a class="btn pri" href="#start" style="padding:8px 20px">Começar</a>
 </div></nav>
 
@@ -149,8 +149,26 @@ footer a{color:var(--orange2);font-weight:600}
     <div class="card"><div class="i">🗂️</div><h3>Cadastro de sistemas</h3><p>Nome, URL e ambiente, com validação de URL http/https.</p></div>
     <div class="card"><div class="i">🔑</div><h3>Vários acessos</h3><p>Descrição, login e senha por sistema. Edite e remova quando quiser.</p></div>
     <div class="card"><div class="i">👁️</div><h3>Mostrar e copiar</h3><p>Credenciais ocultas por padrão; revele ou copie só quando precisar.</p></div>
+    <div class="card"><div class="i">👥</div><h3>Permissões por sistema</h3><p>O root cadastra sistemas e usuários. Cada usuário vê e edita só os sistemas vinculados a ele.</p></div>
     <div class="card"><div class="i">🔎</div><h3>Busca</h3><p>Encontre rapidamente por nome do sistema ou ambiente.</p></div>
     <div class="card"><div class="i">🐳</div><h3>Docker pronto</h3><p>Volume persistente, chave gerada no primeiro start e bind local por padrão.</p></div>
+  </div>
+</div></section>
+
+<section id="roles"><div class="wrap">
+  <h2>Cada um vê só o que é seu</h2>
+  <p class="sub">Permissões por sistema, aplicadas no servidor. O root é quem cadastra sistemas e usuários.</p>
+  <div class="two">
+    <div class="card"><h3>👑 Root</h3><ul>
+      <li>Cadastra, edita e exclui sistemas</li>
+      <li>Cadastra, desativa e exclui usuários</li>
+      <li>Vincula cada usuário aos seus sistemas</li>
+      <li>Enxerga todos os sistemas e acessos</li></ul></div>
+    <div class="card"><h3>🧑‍💻 Usuário do sistema</h3><ul>
+      <li>Vê e edita os acessos só dos sistemas vinculados a ele</li>
+      <li>Não enxerga nem altera outros sistemas</li>
+      <li>Não cadastra sistemas nem usuários</li>
+      <li>Troca a própria senha no primeiro login</li></ul></div>
   </div>
 </div></section>
 
@@ -161,11 +179,13 @@ footer a{color:var(--orange2);font-weight:600}
     <div class="card"><h3>✅ O que o Priv Host faz</h3><ul>
       <li>Cifra cada registro com AES-256-GCM (IV aleatório + tag)</li>
       <li>Mantém a chave fora do banco e fora do Git</li>
+      <li>Login com senhas scrypt, sessão HttpOnly e bloqueio por tentativas</li>
+      <li>Valida a permissão de cada sistema no servidor</li>
       <li>Rejeita mutações com Origin diferente do host</li>
       <li>Responde com <code>Cache-Control: no-store</code></li>
       <li>Publica só em <code>127.0.0.1</code> por padrão</li></ul></div>
     <div class="card bad"><h3>⚠️ O que fica com você</h3><ul>
-      <li>Não há login próprio: use em máquina ou rede privada</li>
+      <li>Prefira rede privada ou proxy HTTPS; evite expor na internet</li>
       <li>Faça backup do banco <b>e</b> da chave</li>
       <li>Sem a chave, os registros não são recuperáveis</li>
       <li>Não exponha na internet</li></ul></div>
@@ -188,7 +208,7 @@ http://localhost:3000/systems   <span class="c"># cadastro</span></pre></div>
 <span class="k">npm</span> install
 <span class="k">npm</span> run dev</pre></div>
   </div>
-  <div class="warn">⚠️ <b>Sem autenticação própria.</b> Rode apenas localmente ou em rede privada protegida.</div>
+  <div class="warn">⚠️ <b>Primeiro acesso:</b> entre como <code>root</code> (senha em <code>PRIV_HOST_ROOT_PASSWORD</code> ou nos logs do container). Prefira rede privada ou HTTPS.</div>
 </div></section>
 
 <section class="alt"><div class="wrap">

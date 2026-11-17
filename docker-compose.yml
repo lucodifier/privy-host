@@ -1,11 +1,24 @@
+# Nome do projeto e do volume fixos: o banco não "troca de volume" se a pasta do repositório mudar.
+name: priv-host
+
 services:
   priv-host:
     build: .
+    image: priv-host:latest
+    container_name: priv-host
     ports:
-      - "127.0.0.1:3000:3000"
+      # Porta externa configurável (PRIV_HOST_PORT no .env). Dentro do container é sempre 3000.
+      # PRIV_HOST_BIND=0.0.0.0 para acessar de outras máquinas (padrão: só localhost).
+      - "${PRIV_HOST_BIND:-127.0.0.1}:${PRIV_HOST_PORT:-3000}:3000"
+    environment:
+      PRIV_HOST_ENCRYPTION_KEY: "${PRIV_HOST_ENCRYPTION_KEY:-}"
+      PRIV_HOST_ROOT_USER: "${PRIV_HOST_ROOT_USER:-root}"
+      PRIV_HOST_ROOT_PASSWORD: "${PRIV_HOST_ROOT_PASSWORD:-}"
     volumes:
+      # Banco SQLite + chave ficam neste volume e sobrevivem a rebuilds e atualizações.
       - priv-host-data:/app/data
     restart: unless-stopped
 
 volumes:
   priv-host-data:
+    name: priv-host-data

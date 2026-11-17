@@ -21,3 +21,4 @@ data/*.e2e.db
 .DS_Store
 
 data/.encryption-key
+data/root-initial-password.txt

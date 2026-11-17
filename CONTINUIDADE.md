@@ -11,7 +11,7 @@ Requer Node.js 24 ou superior. A chave PRIV_HOST_ENCRYPTION_KEY deve conter 32 b
 
 Execute npm install e npm run dev. Para produção local: npm run build e npm start.
 
-Esta versão não possui autenticação própria e deve rodar localmente ou em uma rede privada protegida. Não foi publicada.
+Autenticação e permissões: usuário root (criado na primeira execução) cadastra sistemas e usuários; cada usuário só acessa os sistemas vinculados (tabelas users, memberships, sessions). Banco em PRIV_HOST_DATA_DIR (padrão ./data), migrações aditivas via PRAGMA user_version em lib/db.ts. Porta externa via PRIV_HOST_PORT no docker-compose.
 
 A estrutura antiga de projetos, favoritos, atividade e segredos foi retirada da interface e suas páginas foram removidas. O schema Prisma anterior não é usado pelo novo fluxo. Nenhum banco anterior foi alterado.
 

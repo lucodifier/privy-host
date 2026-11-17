@@ -210,3 +210,25 @@ button:disabled { opacity: .5; cursor: wait; }
 .dash-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); color: var(--ink); font-size: 12px; cursor: pointer; }
 .dash-chip:hover { border-color: var(--brand); }
 @media (max-width: 860px) { .dash-stats { grid-template-columns: repeat(2, 1fr); } .dash-row { grid-template-columns: 1fr; } .dash-bar { grid-template-columns: 90px 1fr 24px; } }
+
+/* Autenticação e usuários */
+.auth-page { min-height: 100dvh; display: grid; place-items: center; padding: 24px; }
+.auth-card { width: min(400px, 100%); background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 30px; box-shadow: 0 24px 100px #0006; }
+.auth-card h1 { font-size: 21px; font-weight: 600; letter-spacing: -.4px; }
+.auth-card > p:not(.error-message) { color: var(--muted); font-size: 12px; margin-top: -8px; }
+.auth-card .error-message { margin: 0; }
+.auth-icon { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #f9731640; background: #f9731612; color: var(--brand); border-radius: 11px; }
+.sidebar-user { display: grid; gap: 4px; font-size: 12px; }
+.sidebar-user strong { color: var(--ink); font-size: 13px; overflow-wrap: anywhere; }
+.sidebar-user span { color: var(--muted); margin-bottom: 8px; }
+.sidebar-user a, .sidebar-user button { display: flex; align-items: center; gap: 7px; color: var(--muted); padding: 4px 0; cursor: pointer; text-align: left; }
+.sidebar-user a:hover, .sidebar-user button:hover { color: var(--brand-light); }
+.user-row { display: grid; grid-template-columns: 1fr auto; gap: 14px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.user-row.inactive { opacity: .6; }
+.user-systems { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.user-systems .environment { margin-top: 0; background: var(--canvas); }
+.badge-root { color: var(--brand-light); border: 1px solid #f9731650; border-radius: 4px; font-size: 10px; padding: 1px 6px; }
+.system-picks { display: grid; gap: 6px; max-height: 220px; overflow-y: auto; border: 1px solid var(--line); border-radius: 6px; padding: 8px; background: var(--canvas); }
+.editor-fields .system-pick { display: flex; align-items: center; gap: 9px; font-weight: 400; }
+.editor-fields .system-pick input { width: auto; height: auto; }
+.editor-fields input:disabled { opacity: .6; }

@@ -1,2 +1,6 @@
 import { DashboardView } from "@/components/dashboard-view";
-export default function DashboardPage() { return <DashboardView />; }
+import { getCurrentUser } from "@/lib/auth";
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+  return <DashboardView isRoot={user?.role === "root"} />;
+}

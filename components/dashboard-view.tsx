@@ -14,7 +14,7 @@ function CopyChip({ label, value, icon }: { label: string; value: string; icon: 
   </button>;
 }
 
-export function DashboardView() {
+export function DashboardView({ isRoot }: { isRoot: boolean }) {
   const [systems, setSystems] = useState<System[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -25,6 +25,7 @@ export function DashboardView() {
   useEffect(() => {
     fetch("/api/systems", { cache: "no-store" }).then(async response => {
       const data = await response.json();
+      if (response.status === 401) { window.location.href = "/login"; return; }
       if (!response.ok) throw new Error(data.error);
       setSystems(data);
     }).catch(cause => setError(cause instanceof Error ? cause.message : "Não foi possível carregar os sistemas.")).finally(() => setLoading(false));
@@ -47,7 +48,7 @@ export function DashboardView() {
   const toggle = (id: string) => setOpen(previous => { const next = new Set(previous); if (next.has(id)) next.delete(id); else next.add(id); return next; });
 
   return <>
-    <header className="page-heading"><div><p className="eyebrow">PRIV HOST</p><h1>Dashboard</h1><p>Visão geral dos seus sistemas e acesso rápido.</p></div><Link className="secondary-action" href="/systems"><Server size={16} />Gerenciar sistemas</Link></header>
+    <header className="page-heading"><div><p className="eyebrow">PRIV HOST</p><h1>Dashboard</h1><p>Visão geral dos seus sistemas e acesso rápido.</p></div><Link className="secondary-action" href="/systems"><Server size={16} />{isRoot ? "Gerenciar sistemas" : "Meus sistemas"}</Link></header>
     {error && <div role="alert" className="error-message">{error}</div>}
     <section className="dash-stats" aria-label="Resumo">
       <div className="dash-stat"><span className="dash-stat-icon"><Server size={18} /></span><strong>{loading ? "–" : systems.length}</strong><span>Sistemas</span></div>
@@ -66,7 +67,7 @@ export function DashboardView() {
 
     <section className="dash-panel" aria-label="Lista de sistemas">
       <div className="list-toolbar"><div><h2>Acesso rápido{env && <span className="count">{env}</span>}</h2></div><div className="system-search"><Search size={16} /><input type="search" aria-label="Buscar sistemas" placeholder="Buscar sistema ou ambiente…" value={query} onChange={event => setQuery(event.target.value)} /></div></div>
-      {loading ? <div className="empty-state">Carregando…</div> : filtered.length === 0 ? <div className="empty-state"><span className="empty-icon"><Server size={28} /></span><h3>{systems.length ? "Nenhum sistema encontrado" : "Seu primeiro sistema começa aqui"}</h3><p>{systems.length ? "Tente outro termo ou limpe o filtro de ambiente." : "Cadastre a URL, o ambiente e os dados de acesso."}</p>{!systems.length && <Link className="primary-action" href="/systems">Cadastrar sistema</Link>}</div> :
+      {loading ? <div className="empty-state">Carregando…</div> : filtered.length === 0 ? <div className="empty-state"><span className="empty-icon"><Server size={28} /></span><h3>{systems.length ? "Nenhum sistema encontrado" : "Seu primeiro sistema começa aqui"}</h3><p>{systems.length ? "Tente outro termo ou limpe o filtro de ambiente." : isRoot ? "Cadastre a URL, o ambiente e os dados de acesso." : "Peça ao usuário root para vincular um sistema ao seu usuário."}</p>{!systems.length && isRoot && <Link className="primary-action" href="/systems">Cadastrar sistema</Link>}</div> :
         <ul className="dash-list">{filtered.map(system => <li key={system.id} className="dash-row">
           <div className="dash-row-main">
             <div className="dash-row-title"><strong>{system.name}</strong><span className="environment">{system.environment}</span></div>
