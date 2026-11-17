@@ -1,4 +1,5 @@
 "use client";
+import { PasswordInput } from "@/components/password-input";
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Check, Copy, ExternalLink, Eye, EyeOff, Globe, Pencil, Plus, Search, Server, Trash2, X } from "lucide-react";
@@ -62,7 +63,7 @@ function SystemEditor({ initial, isRoot, onClose, onSave }: { initial: System | 
         {draft.accesses.map((access, index) => <section key={access.id} className="access-editor" aria-label={"Acesso " + (index + 1)}>
           <div className="access-editor-heading"><strong>Acesso {index + 1}</strong><button type="button" className="icon-action danger" aria-label={"Remover acesso " + (index + 1)} onClick={() => setDraft({ ...draft, accesses: draft.accesses.filter(item => item.id !== access.id) })}><Trash2 size={16} /></button></div>
           <label>Descrição<input required maxLength={120} value={access.description} onChange={event => changeAccess(access.id, "description", event.target.value)} placeholder="Ex.: Administrador" /></label>
-          <div className="access-inputs"><label>Login<input required autoComplete="off" maxLength={300} value={access.login} onChange={event => changeAccess(access.id, "login", event.target.value)} placeholder="Usuário ou e-mail" /></label><label>Senha<input type="password" required autoComplete="new-password" maxLength={2000} value={access.password} onChange={event => changeAccess(access.id, "password", event.target.value)} placeholder="Senha de acesso" /></label></div>
+          <div className="access-inputs"><label>Login<input required autoComplete="off" maxLength={300} value={access.login} onChange={event => changeAccess(access.id, "login", event.target.value)} placeholder="Usuário ou e-mail" /></label><label>Senha<PasswordInput required autoComplete="new-password" maxLength={2000} value={access.password} onChange={event => changeAccess(access.id, "password", event.target.value)} placeholder="Senha de acesso" /></label></div>
         </section>)}
       </fieldset>
       {error && <p role="alert" className="error-message">{error}</p>}

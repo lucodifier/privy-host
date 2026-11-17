@@ -232,3 +232,10 @@ button:disabled { opacity: .5; cursor: wait; }
 .editor-fields .system-pick { display: flex; align-items: center; gap: 9px; font-weight: 400; }
 .editor-fields .system-pick input { width: auto; height: auto; }
 .editor-fields input:disabled { opacity: .6; }
+
+/* Campo de senha com olho */
+.pw-field { position: relative; display: block; }
+.pw-field input { padding-right: 40px !important; }
+.pw-toggle { position: absolute; top: 0; right: 0; height: 100%; width: 38px; display: grid; place-items: center; color: var(--muted); cursor: pointer; border-radius: 0 6px 6px 0; }
+.pw-toggle:hover { color: var(--brand-light); }
+.pw-toggle:disabled { cursor: not-allowed; }

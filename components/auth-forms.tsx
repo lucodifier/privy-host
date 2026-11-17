@@ -1,4 +1,5 @@
 "use client";
+import { PasswordInput } from "@/components/password-input";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { Lock } from "lucide-react";
@@ -28,7 +29,7 @@ export function LoginForm() {
     <h1>Entrar no Priv Host</h1>
     <p>Use o usuário que o administrador criou para você.</p>
     <label>Usuário<input autoFocus required autoComplete="username" value={username} onChange={event => setUsername(event.target.value)} /></label>
-    <label>Senha<input type="password" required autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} /></label>
+    <label>Senha<PasswordInput required autoComplete="current-password" value={password} onChange={event => setPassword(event.target.value)} /></label>
     {error && <p role="alert" className="error-message">{error}</p>}
     <button className="primary-action" disabled={busy}>{busy ? "Entrando…" : "Entrar"}</button>
   </form>;
@@ -51,9 +52,9 @@ export function PasswordForm({ forced }: { forced: boolean }) {
     <span className="auth-icon"><Lock size={22} /></span>
     <h1>{forced ? "Defina sua senha" : "Alterar senha"}</h1>
     <p>{forced ? "Por segurança, troque a senha inicial antes de continuar." : "A nova senha encerra as outras sessões abertas."}</p>
-    <label>Senha atual<input type="password" required autoComplete="current-password" value={current} onChange={event => setCurrent(event.target.value)} /></label>
-    <label>Nova senha (mín. 10 caracteres)<input type="password" required minLength={10} autoComplete="new-password" value={next} onChange={event => setNext(event.target.value)} /></label>
-    <label>Confirmar nova senha<input type="password" required minLength={10} autoComplete="new-password" value={confirm} onChange={event => setConfirm(event.target.value)} /></label>
+    <label>Senha atual<PasswordInput required autoComplete="current-password" value={current} onChange={event => setCurrent(event.target.value)} /></label>
+    <label>Nova senha (mín. 10 caracteres)<PasswordInput required minLength={10} autoComplete="new-password" value={next} onChange={event => setNext(event.target.value)} /></label>
+    <label>Confirmar nova senha<PasswordInput required minLength={10} autoComplete="new-password" value={confirm} onChange={event => setConfirm(event.target.value)} /></label>
     {error && <p role="alert" className="error-message">{error}</p>}
     <button className="primary-action" disabled={busy}>{busy ? "Salvando…" : "Salvar senha"}</button>
     {!forced && <Link className="secondary-action" href="/">Cancelar</Link>}

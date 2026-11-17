@@ -1,4 +1,5 @@
 "use client";
+import { PasswordInput } from "@/components/password-input";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Pencil, Plus, Power, Trash2, UserRound, X } from "lucide-react";
 import type { System } from "@/lib/systems";
@@ -35,7 +36,7 @@ function UserEditor({ initial, systems, onClose, onSaved }: { initial: AppUser |
       <div className="dialog-heading"><div><h2 id="user-title">{initial ? "Editar usuário" : "Novo usuário"}</h2><p>O usuário vê e edita os acessos apenas dos sistemas marcados abaixo.</p></div><button type="button" className="icon-action" onClick={onClose} disabled={saving} aria-label="Fechar"><X size={20} /></button></div>
       <fieldset disabled={saving} className="editor-fields">
         <label>Usuário<input autoFocus required disabled={Boolean(initial)} autoComplete="off" value={username} onChange={event => setUsername(event.target.value)} placeholder="Ex.: maria.silva" /></label>
-        <label>{initial ? "Nova senha (deixe vazio para manter)" : "Senha inicial (mín. 10 caracteres)"}<input type="password" required={!initial} minLength={initial ? undefined : 10} autoComplete="new-password" value={password} onChange={event => setPassword(event.target.value)} /></label>
+        <label>{initial ? "Nova senha (deixe vazio para manter)" : "Senha inicial (mín. 10 caracteres)"}<PasswordInput required={!initial} minLength={initial ? undefined : 10} autoComplete="new-password" value={password} onChange={event => setPassword(event.target.value)} /></label>
         <div className="editor-fields"><span style={{ fontSize: 12, fontWeight: 500 }}>Sistemas que este usuário administra</span>
           <div className="system-picks">{systems.length === 0 ? <span className="empty-access">Cadastre sistemas primeiro.</span> : systems.map(system => <label key={system.id} className="system-pick"><input type="checkbox" checked={systemIds.includes(system.id)} onChange={() => toggle(system.id)} />{system.name} <span className="environment" style={{ marginTop: 0 }}>{system.environment}</span></label>)}</div>
         </div>
