@@ -4,13 +4,26 @@ import { useEffect, useMemo, useState } from "react";
 import { Check, ChevronDown, ExternalLink, KeyRound, Layers, Search, Server, ShieldAlert, User } from "lucide-react";
 import type { System } from "@/lib/systems";
 
+async function copyText(value: string) {
+  try { if (window.isSecureContext && navigator.clipboard) { await navigator.clipboard.writeText(value); return true; } } catch { /* tenta o fallback */ }
+  // Fallback para http (fora de localhost), onde a API de clipboard não existe.
+  const area = document.createElement("textarea");
+  area.value = value; area.setAttribute("readonly", ""); area.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+  document.body.appendChild(area); area.select(); area.setSelectionRange(0, value.length);
+  let ok = false;
+  try { ok = document.execCommand("copy"); } catch { ok = false; }
+  document.body.removeChild(area);
+  return ok;
+}
+
 function CopyChip({ label, value, icon }: { label: string; value: string; icon: "login" | "senha" }) {
-  const [done, setDone] = useState(false);
+  const [state, setState] = useState<"idle" | "done" | "fail">("idle");
   async function copy() {
-    try { await navigator.clipboard.writeText(value); setDone(true); setTimeout(() => setDone(false), 1500); } catch { /* sem permissão de clipboard */ }
+    setState(await copyText(value) ? "done" : "fail");
+    setTimeout(() => setState("idle"), 1500);
   }
   return <button type="button" className="dash-chip" onClick={copy} title={"Copiar " + label.toLowerCase()}>
-    {done ? <Check size={13} /> : icon === "login" ? <User size={13} /> : <KeyRound size={13} />}{done ? "Copiado" : label}
+    {state === "done" ? <Check size={13} /> : icon === "login" ? <User size={13} /> : <KeyRound size={13} />}{state === "done" ? "Copiado" : state === "fail" ? "Não foi possível copiar" : label}
   </button>;
 }
 
