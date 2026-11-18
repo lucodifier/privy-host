@@ -34,7 +34,7 @@ Tudo roda na sua máquina. Nenhum dado sai dela.
 | 🔑 **Múltiplos acessos por sistema** | Descrição, login e senha; edite e remova quando quiser. |
 | 👁️ **Mostrar / copiar** | Credenciais ocultas por padrão, reveladas ou copiadas sob demanda. |
 | 🔎 **Busca** | Encontre sistemas por nome ou ambiente. |
-| 👥 **Usuários e permissões por sistema** | Usuário `root` cadastra sistemas e usuários; cada usuário só vê e edita os acessos dos sistemas vinculados a ele. |
+| 👥 **Usuários e permissões por sistema** | Só o `root` cadastra usuários; cada usuário também cadastra sistemas (ficam vinculados a ele) e só vê e edita os acessos dos sistemas vinculados a ele. |
 | 🛡️ **Criptografia em repouso** | Cada registro é cifrado com AES-256-GCM antes de ir ao SQLite. |
 | 🐳 **Docker pronto** | Um `docker compose up` e está no ar, com volume persistente. |
 
@@ -159,7 +159,7 @@ npm run dev            # http://localhost:3000
 | Quem | Pode |
 |---|---|
 | **root** | Cadastrar/editar/excluir **sistemas**; cadastrar/editar/desativar/excluir **usuários**; vincular usuários a sistemas; ver tudo. |
-| **Usuário (admin de sistema)** | Ver e editar os **acessos** (descrição, login, senha) **somente dos sistemas vinculados a ele**. Não vê outros sistemas, não altera nome/URL/ambiente, não cadastra sistemas nem usuários. |
+| **Usuário (admin de sistema)** | Ver e editar os **acessos** (descrição, login, senha) **somente dos sistemas vinculados a ele**. Não vê outros sistemas, pode **cadastrar novos sistemas** (vinculados a ele), mas não altera nome/URL/ambiente dos já existentes, não exclui sistemas e não cadastra usuários. |
 
 Um usuário pode estar vinculado a mais de um sistema. Quem tenta acessar um sistema sem vínculo recebe "não encontrado".
 

@@ -1,4 +1,4 @@
-import { createSystem, deleteSystem, getSystem, listSystems, updateSystem } from "@/lib/system-store";
+import { linkSystem, createSystem, deleteSystem, getSystem, listSystems, updateSystem } from "@/lib/system-store";
 import { systemSchema } from "@/lib/systems";
 import { authorize, json, readBody } from "@/lib/guard";
 export const runtime = "nodejs";
@@ -12,8 +12,8 @@ export async function GET(request: Request) {
 }
 
 async function mutate(request: Request, method: "POST" | "PUT" | "DELETE") {
-  // Cadastrar e excluir sistemas: somente root. Editar: root (tudo) ou admin do sistema (apenas acessos).
-  const user = await authorize(request, { mutate: true, root: method !== "PUT" });
+  // Cadastrar: qualquer usuário (fica vinculado a ele). Excluir: somente root. Editar: root (tudo) ou admin do sistema (apenas acessos).
+  const user = await authorize(request, { mutate: true, root: method === "DELETE" });
   if (user instanceof Response) return user;
   const body = await readBody(request);
   if (!body) return json({ error: "Dados inválidos." }, 400);
@@ -23,7 +23,9 @@ async function mutate(request: Request, method: "POST" | "PUT" | "DELETE") {
     if (method === "POST") {
       const parsed = systemSchema.safeParse(body);
       if (!parsed.success) return json({ error: parsed.error.issues[0].message }, 400);
-      return json(createSystem(parsed.data), 201);
+      const created = createSystem(parsed.data);
+      if (user.role !== "root") linkSystem(user.id, created.id);
+      return json(created, 201);
     }
     const id = body.id as string;
     // Sem vínculo, o sistema "não existe" para o usuário (não vaza a existência de outros sistemas).

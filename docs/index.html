@@ -149,7 +149,7 @@ footer a{color:var(--orange2);font-weight:600}
     <div class="card"><div class="i">🗂️</div><h3>Cadastro de sistemas</h3><p>Nome, URL e ambiente, com validação de URL http/https.</p></div>
     <div class="card"><div class="i">🔑</div><h3>Vários acessos</h3><p>Descrição, login e senha por sistema. Edite e remova quando quiser.</p></div>
     <div class="card"><div class="i">👁️</div><h3>Mostrar e copiar</h3><p>Credenciais ocultas por padrão; revele ou copie só quando precisar.</p></div>
-    <div class="card"><div class="i">👥</div><h3>Permissões por sistema</h3><p>O root cadastra sistemas e usuários. Cada usuário vê e edita só os sistemas vinculados a ele.</p></div>
+    <div class="card"><div class="i">👥</div><h3>Permissões por sistema</h3><p>Só o root cadastra usuários. Cada usuário pode cadastrar sistemas e vê e edita só os sistemas vinculados a ele.</p></div>
     <div class="card"><div class="i">🔎</div><h3>Busca</h3><p>Encontre rapidamente por nome do sistema ou ambiente.</p></div>
     <div class="card"><div class="i">🐳</div><h3>Docker pronto</h3><p>Volume persistente, chave gerada no primeiro start e bind local por padrão.</p></div>
   </div>
@@ -157,7 +157,7 @@ footer a{color:var(--orange2);font-weight:600}
 
 <section id="roles"><div class="wrap">
   <h2>Cada um vê só o que é seu</h2>
-  <p class="sub">Permissões por sistema, aplicadas no servidor. O root é quem cadastra sistemas e usuários.</p>
+  <p class="sub">Permissões por sistema, aplicadas no servidor. Só o root cadastra usuários.</p>
   <div class="two">
     <div class="card"><h3>👑 Root</h3><ul>
       <li>Cadastra, edita e exclui sistemas</li>
@@ -167,7 +167,7 @@ footer a{color:var(--orange2);font-weight:600}
     <div class="card"><h3>🧑‍💻 Usuário do sistema</h3><ul>
       <li>Vê e edita os acessos só dos sistemas vinculados a ele</li>
       <li>Não enxerga nem altera outros sistemas</li>
-      <li>Não cadastra sistemas nem usuários</li>
+      <li>Cadastra sistemas próprios, mas não cadastra usuários</li>
       <li>Troca a própria senha no primeiro login</li></ul></div>
   </div>
 </div></section>

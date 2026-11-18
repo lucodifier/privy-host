@@ -39,6 +39,9 @@ export function createSystem(input: SystemInput) {
   db().prepare("INSERT INTO systems (id, content) VALUES (?, ?)").run(id, encrypt(parsed));
   return { id, ...parsed };
 }
+export function linkSystem(userId: string, systemId: string) {
+  db().prepare("INSERT OR IGNORE INTO memberships (user_id, system_id) VALUES (?, ?)").run(userId, systemId);
+}
 export function updateSystem(id: string, input: SystemInput) {
   const parsed = systemSchema.parse(input);
   const result = db().prepare("UPDATE systems SET content = ? WHERE id = ?").run(encrypt(parsed), id);
